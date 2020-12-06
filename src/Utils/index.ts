@@ -10,7 +10,32 @@
 import info from 'property-information'
 import { htmlEscape } from 'escape-goat'
 import toString from 'hast-util-to-string'
-import voidElements from 'html-void-elements'
+
+const voidElements = [
+	'area',
+	'base',
+	'basefont',
+	'bgsound',
+	'br',
+	'col',
+	'command',
+	'embed',
+	'frame',
+	'hr',
+	'image',
+	'img',
+	'input',
+	'isindex',
+	'keygen',
+	'link',
+	'menuitem',
+	'meta',
+	'nextid',
+	'param',
+	'source',
+	'track',
+	'wbr',
+]
 
 /**
  * Utilities shared with the Edge templates as a global
