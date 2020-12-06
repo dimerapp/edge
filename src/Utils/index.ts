@@ -64,19 +64,23 @@ export class Utils {
 				if (!propInfo || propInfo.space === 'svg') {
 					return result
 				}
+
 				let value = props[key]
+
 				/**
 				 * Join array values with correct seperator
 				 */
 				if (Array.isArray(value)) {
 					value = value.join(propInfo.commaSeparated ? ',' : ' ')
 				}
+
 				/**
 				 * Wrap values inside double quotes when not booleanish
 				 */
-				if (!propInfo.booleanish) {
+				if (!propInfo.booleanish && !propInfo.number) {
 					value = `"${htmlEscape(value)}"`
 				}
+
 				/**
 				 * Push key value string
 				 */

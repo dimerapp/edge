@@ -36,7 +36,7 @@ test.group('Edge renderer', () => {
 		assert.equal(
 			html,
 			dedent`
-			<h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex="undefined"><span class="icon icon-link"></span></a>Hello world</h1>
+			<h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex=-1><span class="icon icon-link"></span></a>Hello world</h1>
 			<p>This is a paragraph</p>
 			<ul>
 			<li>List item</li>
@@ -75,7 +75,7 @@ test.group('Edge renderer', () => {
 		assert.equal(
 			html,
 			dedent`
-			<h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex="undefined"><span class="icon icon-link"></span></a>Hello world</h1>
+			<h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex=-1><span class="icon icon-link"></span></a>Hello world</h1>
 			<p>This is a paragraph</p>
 			<div class="alert alert-note"><p>This is a note</p></div>
 		`
@@ -109,7 +109,7 @@ test.group('Edge renderer', () => {
 		assert.equal(
 			html,
 			dedent`
-			<h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex="undefined"><span class="icon icon-link"></span></a>Hello world</h1>
+			<h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex=-1><span class="icon icon-link"></span></a>Hello world</h1>
 			<p>This is a paragraph</p>
 			<div class="note">This is a note</div>
 		`
