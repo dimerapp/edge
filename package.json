@@ -26,11 +26,14 @@
   "license": "MIT",
   "devDependencies": {
     "@adonisjs/mrm-preset": "^2.4.0",
+    "@adonisjs/require-ts": "^1.1.1",
+    "@dimerapp/markdown": "^4.1.2",
     "@types/node": "^14.14.10",
     "commitizen": "^4.2.2",
     "cz-conventional-changelog": "^3.3.0",
     "del-cli": "^3.0.1",
     "doctoc": "^2.0.0",
+    "edge.js": "^3.5.1",
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-adonis": "^1.0.15",
@@ -42,7 +45,7 @@
     "np": "^7.0.0",
     "npm-audit-html": "^1.5.0",
     "prettier": "^2.2.1",
-    "ts-node": "^9.1.0",
+    "ts-dedent": "^2.0.0",
     "typescript": "^4.1.2"
   },
   "husky": {
@@ -73,5 +76,12 @@
   "np": {
     "contents": ".",
     "anyBranch": false
+  },
+  "dependencies": {
+    "edge-error": "^1.0.5",
+    "escape-goat": "^3.0.0",
+    "hast-util-to-string": "^1.0.4",
+    "html-void-elements": "^1.0.5",
+    "property-information": "^5.6.0"
   }
 }
