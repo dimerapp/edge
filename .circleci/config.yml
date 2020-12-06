@@ -10,7 +10,11 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
-      - run: npm install
+      - run:
+          name: Npm install
+          command: npm install
+          environment:
+            HUSKY_SKIP_INSTALL: 1
       - save_cache:
           paths:
             - node_modules
@@ -26,7 +30,11 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
-      - run: npm install
+      - run:
+          name: Npm install
+          command: npm install
+          environment:
+            HUSKY_SKIP_INSTALL: 1
       - save_cache:
           paths:
             - node_modules
