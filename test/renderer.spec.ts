@@ -220,4 +220,50 @@ test.group('Edge renderer', () => {
 		`
 		)
 	})
+
+	test('use different renderer with dimerTree tag', async (assert) => {
+		const markdown = ['This is a codeblock', '', '```', 'const a = require("a")', '```'].join('\n')
+		const file = new MarkdownFile(markdown)
+		await file.process()
+
+		const edge = new Edge()
+		edge.use(dimerEdge)
+		edge.registerTemplate('guide', {
+			template: `@dimerTree(file.ast.children, secondaryRenderer)`,
+		})
+
+		edge.registerTemplate('pre', {
+			template: dedent`
+				<div class="highlight">
+					<pre>
+					@dimerTree(node.children, secondaryRenderer)
+					</pre>
+				</div>
+			`,
+		})
+
+		edge.processor.process('compiled', ({ compiled }) => console.log(compiled))
+
+		const html = edge
+			.share({
+				secondaryRenderer: new Renderer().use((node) => {
+					if (node.tagName === 'pre') {
+						return ['pre', { node }]
+					}
+				}),
+			})
+			.render('guide', { file })
+
+		assert.equal(
+			html,
+			dedent`
+			<p>This is a codeblock</p>
+			<div class="highlight">
+				<pre><code>const a = require(&quot;a&quot;)
+			</code>
+				</pre>
+			</div>
+		`
+		)
+	})
 })

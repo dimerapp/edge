@@ -45,7 +45,7 @@ export default function (edge: EdgeContract) {
 			'<{{node.tagName}}{{{dimerUtils.propsToAttributes(node.properties)}}}/>',
 			'@else~',
 			'<{{node.tagName}}{{{dimerUtils.propsToAttributes(node.properties)}}}>',
-			'@dimerTree(node.children)~',
+			'@dimerTree(node.children, renderer)~',
 			'</{{node.tagName}}>',
 			'@endif',
 		].join('\n'),

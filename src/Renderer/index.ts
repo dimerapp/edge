@@ -13,7 +13,10 @@ import { hastTypes } from '@dimerapp/markdown'
  * Renderer to decide the component to be used for a node
  */
 export class Renderer {
-	private customRenderers: ((node: any) => void | boolean | [string, any])[] = []
+	private customRenderers: ((
+		node: any,
+		renderer: Renderer
+	) => void | boolean | [string, any])[] = []
 
 	/**
 	 * Define a callback to handle rendering of a given node. The callback
@@ -27,7 +30,7 @@ export class Renderer {
 	/**
 	 * Returns the component name and data for a given AST node
 	 */
-	public getComponentFor(node: hastTypes.Node) {
+	public getComponentFor(node: hastTypes.Node, renderReference: Renderer) {
 		/**
 		 * Notify listeners for the text node
 		 */
@@ -37,7 +40,7 @@ export class Renderer {
 
 		let customComponent: void | boolean | [string, any]
 		for (let customRenderer of this.customRenderers) {
-			customComponent = customRenderer(node)
+			customComponent = customRenderer(node, renderReference)
 			if (customComponent !== undefined) {
 				break
 			}
@@ -61,6 +64,6 @@ export class Renderer {
 		/**
 		 * Self handle node rendering
 		 */
-		return ['dimer::element', { node }]
+		return ['dimer::element', { node, renderer: renderReference }]
 	}
 }

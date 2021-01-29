@@ -7,13 +7,54 @@
  * file that was distributed with this source code.
  */
 
-import { TagContract } from 'edge.js'
+import { TagContract, TagTokenContract } from 'edge.js'
 import { EdgeError } from 'edge-error'
 
 /**
  * An array of allowed expression
  */
 const ALLOWED_EXPRESSIONS = ['MemberExpression', 'ArrayExpression', 'Identifier']
+
+/**
+ * Raises exception for an invalid expression
+ */
+function invalidExpressionException(
+	type: string,
+	expectedTypes: string[],
+	token: TagTokenContract
+) {
+	return new EdgeError(
+		`Invalid "${type}" expression. Excepted ${expectedTypes.join(',')} expressions`,
+		'E_UNALLOWED_EXPRESSION',
+		{
+			line: token.loc.start.line,
+			col: token.loc.start.col,
+			filename: token.filename,
+		}
+	)
+}
+
+/**
+ * Raises exception for too many arguments
+ */
+function tooManyArgumentsException(token: TagTokenContract) {
+	return new EdgeError('"@dimerTree" accepts a maximum of two arguments', 'E_TOO_MANY_ARGUMENTS', {
+		line: token.loc.start.line,
+		col: token.loc.start.col,
+		filename: token.filename,
+	})
+}
+
+/**
+ * Raises exception for missing arguments
+ */
+function missingArgumentsExceptions(token: TagTokenContract) {
+	return new EdgeError('"@dimerTree" expects an argument to be passed', 'E_MISSING_ARGUMENT', {
+		line: token.loc.start.line,
+		col: token.loc.start.col,
+		filename: token.filename,
+	})
+}
 
 /**
  * Edge tag to recursively render Dimer AST
@@ -28,11 +69,7 @@ export const DimerTree: TagContract = {
 		 * Raise exception when no arg is passed
 		 */
 		if (!token.properties.jsArg) {
-			throw new EdgeError('"@dimerTree" expects an argument to be passed', 'E_MISSING_ARGUMENT', {
-				line: token.loc.start.line,
-				col: token.loc.start.col,
-				filename: token.filename,
-			})
+			throw missingArgumentsExceptions(token)
 		}
 
 		/**
@@ -46,25 +83,56 @@ export const DimerTree: TagContract = {
 		)
 
 		/**
-		 * Raise error, if value is not an identifier or an array expression
+		 * Tree expression is dimer tree to loop over
 		 */
-		if (!ALLOWED_EXPRESSIONS.includes(expression.type)) {
-			throw new EdgeError(
-				'"@dimerTree" only accepts an Identifier or an ArrayExpression',
-				'E_UNALLOWED_EXPRESSION',
-				{
-					line: token.loc.start.line,
-					col: token.loc.start.col,
-					filename: token.filename,
-				}
-			)
+		let treeExpression: any
+
+		/**
+		 * The renderer reference is the renderer to use to render the node. One
+		 * can define a custom value too
+		 */
+		let rendererReference = 'state.dimerRenderer'
+
+		/**
+		 * Handle sequence expression to allow two arguments. Expecting first
+		 * to be the dimer tree reference and other be the custom renderer
+		 * reference
+		 */
+		if (expression.type === 'SequenceExpression') {
+			const childrenExpression = expression.expressions
+			if (childrenExpression.length > 2) {
+				throw tooManyArgumentsException(token)
+			}
+
+			treeExpression = childrenExpression[0]
+
+			/**
+			 * The second argument has to be an identifier. Inline renderers cannot
+			 * be created at all
+			 */
+			if (childrenExpression[1].type !== 'Identifier') {
+				throw invalidExpressionException(childrenExpression[1].type.type, ['Identifier'], token)
+			}
+
+			rendererReference = `${parser.utils.stringify(
+				parser.utils.transformAst(childrenExpression[1], token.filename, parser)
+			)}`
+		} else {
+			treeExpression = expression
+		}
+
+		/**
+		 * Raise error, if "treeExpression" is not one of the allowed expression
+		 */
+		if (!ALLOWED_EXPRESSIONS.includes(treeExpression.type)) {
+			throw invalidExpressionException(treeExpression.type, ALLOWED_EXPRESSIONS, token)
 		}
 
 		/**
 		 * Parse ast expression to a Javascript string expression
 		 */
 		const list = parser.utils.stringify(
-			parser.utils.transformAst(expression, token.filename, parser)
+			parser.utils.transformAst(treeExpression, token.filename, parser)
 		)
 
 		/**
@@ -80,7 +148,7 @@ export const DimerTree: TagContract = {
 		 * For each children node recursively render this component
 		 */
 		buffer.outputExpression(
-			'template.renderWithState(...state.dimerRenderer.getComponentFor(node))',
+			`template.renderWithState(...${rendererReference}.getComponentFor(node, ${rendererReference}))`,
 			token.filename,
 			token.loc.start.line,
 			false
