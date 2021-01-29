@@ -82,5 +82,17 @@
     "escape-goat": "^3.0.0",
     "hast-util-to-string": "^1.0.4",
     "property-information": "^5.6.0"
-  }
+  },
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dimerapp/edge.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dimerapp/edge/issues"
+  },
+  "homepage": "https://github.com/dimerapp/edge#readme"
 }
