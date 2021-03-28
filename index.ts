@@ -19,42 +19,42 @@ export { Renderer } from './src/Renderer'
  * and tags
  */
 export default function (edge: EdgeContract) {
-	/**
-	 * Always needs to be registered once
-	 */
-	edge.global('dimerUtils', new Utils())
+  /**
+   * Always needs to be registered once
+   */
+  edge.global('dimerUtils', new Utils())
 
-	/**
-	 * Always needs to be registered once
-	 */
-	edge.registerTag(DimerTree)
+  /**
+   * Always needs to be registered once
+   */
+  edge.registerTag(DimerTree)
 
-	/**
-	 * Always needs to be registered once
-	 */
-	edge.registerTemplate('dimer::text', {
-		template: '{{node.value}}',
-	})
+  /**
+   * Always needs to be registered once
+   */
+  edge.registerTemplate('dimer::text', {
+    template: '{{node.value}}',
+  })
 
-	/**
-	 * Render an element
-	 */
-	edge.registerTemplate('dimer::element', {
-		template: [
-			'@if(dimerUtils.isVoidElement(node.tagName))~',
-			'<{{node.tagName}}{{{dimerUtils.propsToAttributes(node.properties)}}}/>',
-			'@else~',
-			'<{{node.tagName}}{{{dimerUtils.propsToAttributes(node.properties)}}}>',
-			'@dimerTree(node.children, renderer)~',
-			'</{{node.tagName}}>',
-			'@endif',
-		].join('\n'),
-	})
+  /**
+   * Render an element
+   */
+  edge.registerTemplate('dimer::element', {
+    template: [
+      '@if(dimerUtils.isVoidElement(node.tagName))~',
+      '<{{node.tagName}}{{{dimerUtils.propsToAttributes(node.properties)}}}/>',
+      '@else~',
+      '<{{node.tagName}}{{{dimerUtils.propsToAttributes(node.properties)}}}>',
+      '@dimerTree(node.children, renderer)~',
+      '</{{node.tagName}}>',
+      '@endif',
+    ].join('\n'),
+  })
 
-	/**
-	 * Used when renderer wants to skip a node
-	 */
-	edge.registerTemplate('dimer::void', {
-		template: '',
-	})
+  /**
+   * Used when renderer wants to skip a node
+   */
+  edge.registerTemplate('dimer::void', {
+    template: '',
+  })
 }
