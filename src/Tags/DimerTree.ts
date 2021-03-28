@@ -65,6 +65,10 @@ export const DimerTree: TagContract = {
 	seekable: true,
 
 	compile(parser, buffer, token) {
+		const awaitKeyword = parser.asyncMode ? 'await ' : ''
+		const loopFunctionName = parser.asyncMode ? 'loopAsync' : 'loop'
+		const asyncKeyword = parser.asyncMode ? 'async ' : ''
+
 		/**
 		 * Raise exception when no arg is passed
 		 */
@@ -139,7 +143,7 @@ export const DimerTree: TagContract = {
 		 * Loop over the list
 		 */
 		buffer.writeStatement(
-			`ctx.loop(${list}, function (node) {`,
+			`${awaitKeyword}template.${loopFunctionName}(${list}, ${asyncKeyword}function (node) {`,
 			token.filename,
 			token.loc.start.line
 		)
@@ -148,7 +152,13 @@ export const DimerTree: TagContract = {
 		 * For each children node recursively render this component
 		 */
 		buffer.outputExpression(
-			`template.renderWithState(...${rendererReference}.getComponentFor(node, ${rendererReference}))`,
+			[
+				`${awaitKeyword}(function () {`,
+				`  const [name, props] = ${rendererReference}.getComponentFor(node, ${rendererReference})`,
+				`  return template.compileComponent(name)(`,
+				`		template,`,
+				`		template.getComponentState(props, {}, {}), $context)})()`,
+			].join('\n'),
 			token.filename,
 			token.loc.start.line,
 			false

@@ -28,7 +28,7 @@ export class Renderer {
 	}
 
 	/**
-	 * Returns the component name and data for a given AST node
+	 * Returns the component name and props for a given AST node
 	 */
 	public getComponentFor(node: hastTypes.Node, renderReference: Renderer) {
 		/**
