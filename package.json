@@ -1,6 +1,6 @@
 {
   "name": "@dimerapp/edge",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Edge renderer for rendering dimer markdown AST",
   "scripts": {
     "mrm": "mrm --preset=@adonisjs/mrm-preset",
