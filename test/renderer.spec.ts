@@ -27,7 +27,7 @@ test.group('Edge renderer', () => {
       template: `@dimerTree(file.ast.children)`,
     })
 
-    const html = edge
+    const html = await edge
       .share({
         dimerRenderer: new Renderer(),
       })
@@ -66,7 +66,7 @@ test.group('Edge renderer', () => {
       template: `@dimerTree(file.ast.children)`,
     })
 
-    const html = edge
+    const html = await edge
       .share({
         dimerRenderer: new Renderer(),
       })
@@ -100,7 +100,7 @@ test.group('Edge renderer', () => {
       template: `@dimerTree(file.ast.children)`,
     })
 
-    const html = edge
+    const html = await edge
       .share({
         dimerRenderer: new Renderer(),
       })
@@ -134,7 +134,7 @@ test.group('Edge renderer', () => {
       template: `@dimerTree(file.toc.children)`,
     })
 
-    const html = edge
+    const html = await edge
       .share({
         dimerRenderer: new Renderer(),
       })
@@ -169,7 +169,7 @@ test.group('Edge renderer', () => {
 			`,
     })
 
-    const html = edge
+    const html = await edge
       .share({
         dimerRenderer: new Renderer().use((node) => {
           if (node.tagName === 'pre') {
@@ -203,7 +203,7 @@ test.group('Edge renderer', () => {
       template: `@dimerTree(file.ast.children)`,
     })
 
-    const html = edge
+    const html = await edge
       .share({
         dimerRenderer: new Renderer().use((node) => {
           if (node.tagName === 'pre') {
@@ -242,7 +242,7 @@ test.group('Edge renderer', () => {
 			`,
     })
 
-    const html = edge
+    const html = await edge
       .share({
         secondaryRenderer: new Renderer().use((node) => {
           if (node.tagName === 'pre') {
@@ -266,7 +266,7 @@ test.group('Edge renderer', () => {
   })
 })
 
-test.group('Edge renderer  | async', () => {
+test.group('Edge renderer  | sync', () => {
   test('render markdown AST using the renderer', async (assert) => {
     const markdown = ['# Hello world', '', 'This is a paragraph', '', '- List item'].join('\n')
     const file = new MarkdownFile(markdown)
@@ -278,11 +278,11 @@ test.group('Edge renderer  | async', () => {
       template: `@dimerTree(file.ast.children)`,
     })
 
-    const html = await edge
+    const html = edge
       .share({
         dimerRenderer: new Renderer(),
       })
-      .renderAsync('guide', { file })
+      .renderSync('guide', { file })
 
     assert.equal(
       html,
@@ -317,11 +317,11 @@ test.group('Edge renderer  | async', () => {
       template: `@dimerTree(file.ast.children)`,
     })
 
-    const html = await edge
+    const html = edge
       .share({
         dimerRenderer: new Renderer(),
       })
-      .renderAsync('guide', { file })
+      .renderSync('guide', { file })
 
     assert.equal(
       html,
@@ -351,11 +351,11 @@ test.group('Edge renderer  | async', () => {
       template: `@dimerTree(file.ast.children)`,
     })
 
-    const html = await edge
+    const html = edge
       .share({
         dimerRenderer: new Renderer(),
       })
-      .renderAsync('guide', { file })
+      .renderSync('guide', { file })
 
     assert.equal(
       html,
@@ -388,11 +388,11 @@ test.group('Edge renderer  | async', () => {
 			`,
     })
 
-    const html = await edge
+    const html = edge
       .share({
         dimerRenderer: new Renderer(),
       })
-      .renderAsync('guide', { file })
+      .renderSync('guide', { file })
 
     assert.equal(
       html.trim(),
@@ -425,7 +425,7 @@ test.group('Edge renderer  | async', () => {
 			`,
     })
 
-    const html = await edge
+    const html = edge
       .share({
         dimerRenderer: new Renderer().use((node) => {
           if (node.tagName === 'pre') {
@@ -433,7 +433,7 @@ test.group('Edge renderer  | async', () => {
           }
         }),
       })
-      .renderAsync('guide', { file })
+      .renderSync('guide', { file })
 
     assert.equal(
       html,
@@ -459,7 +459,7 @@ test.group('Edge renderer  | async', () => {
       template: `@dimerTree(file.ast.children)`,
     })
 
-    const html = await edge
+    const html = edge
       .share({
         dimerRenderer: new Renderer().use((node) => {
           if (node.tagName === 'pre') {
@@ -467,7 +467,7 @@ test.group('Edge renderer  | async', () => {
           }
         }),
       })
-      .renderAsync('guide', { file })
+      .renderSync('guide', { file })
 
     assert.equal(
       html,
@@ -498,7 +498,7 @@ test.group('Edge renderer  | async', () => {
 			`,
     })
 
-    const html = await edge
+    const html = edge
       .share({
         secondaryRenderer: new Renderer().use((node) => {
           if (node.tagName === 'pre') {
@@ -506,7 +506,7 @@ test.group('Edge renderer  | async', () => {
           }
         }),
       })
-      .renderAsync('guide', { file })
+      .renderSync('guide', { file })
 
     assert.equal(
       html,
