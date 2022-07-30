@@ -6,9 +6,7 @@ import { MarkdownFile } from '@dimerapp/markdown'
 import * as macros from '@dimerapp/markdown/macros'
 import { ShikiRenderer, codeblocks } from '@dimerapp/shiki'
 
-import * as utils from '../src/utils.js'
-import { dimerProvider } from '../index.js'
-import { MarkdownRenderer } from '../src/renderer.js'
+import { dimerProvider, MarkdownRenderer } from '../index.js'
 
 createServer(async (_, res) => {
   const file = new MarkdownFile(await readFile(new URL('./doc.md', import.meta.url), 'utf-8'), {

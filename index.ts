@@ -10,7 +10,7 @@
 import type { EdgeContract } from 'edge.js'
 
 import * as utils from './src/utils.js'
-export { MarkdownRenderer } from './src/renderer.js'
+export { MarkdownRenderer } from './src/markdown_renderer.js'
 
 /**
  * Edge plugin to register dimer specific globals, components

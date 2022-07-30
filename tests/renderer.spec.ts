@@ -14,8 +14,7 @@ import { test } from '@japa/runner'
 import { MarkdownFile } from '@dimerapp/markdown'
 import * as macros from '@dimerapp/markdown/macros'
 
-import { dimerProvider } from '../index.js'
-import { MarkdownRenderer } from '../src/renderer.js'
+import { dimerProvider, MarkdownRenderer } from '../index.js'
 
 test.group('Edge renderer', () => {
   test('render markdown AST using the renderer', async ({ assert }) => {
