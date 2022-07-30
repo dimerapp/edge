@@ -1,0 +1,8 @@
+<div x-data="{
+  copy() {
+    navigator.clipboard.writeText($el.querySelector('code').textContent)
+  }
+}">
+  <button @click="copy"> Copy to clipboard </button>
+  @!component('dimer_element', { node, renderer })~
+</div>

@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title></title>
+  <script src="//unpkg.com/alpinejs" defer></script>
 	<style type="text/css">
 		* {
 			margin: 0;
@@ -65,28 +66,11 @@
 	</style>
 </head>
 <body>
-
 	<section class="doc">
-		@dimerTree(file.ast.children)
+		@!component('dimer_contents', {
+      nodes: file.ast.children,
+      renderer: dimerRenderer
+    })
 	</section>
-
-	@set('mdContent', file.contents.split('\n'))
-
-	@if(file.messages.length)
-		<div class="error-messages">
-			@each(message in file.messages)
-			<div class="error-message">
-				<div class="error-message-head">
-					<p>{{ message.line }}:{{ message.column }}</p>
-					<p>{{ message.reason }}</p>
-				</div>
-				<div class="error-message-source">
-					{{{getSourceFrame(mdContent, message.line)}}}
-				</div>
-			</div>
-		@end
-		</div>
-	@end
-
 </body>
 </html>

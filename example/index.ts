@@ -1,48 +1,46 @@
-import { join } from 'path'
-import { createServer } from 'http'
 import { Edge, GLOBALS } from 'edge.js'
-import { readFile } from 'fs/promises'
-import { MarkdownFile, macros } from '@dimerapp/markdown'
+import { fileURLToPath } from 'node:url'
+import { createServer } from 'node:http'
+import { readFile } from 'node:fs/promises'
+import { MarkdownFile } from '@dimerapp/markdown'
+import * as macros from '@dimerapp/markdown/macros'
+import { ShikiRenderer, codeblocks } from '@dimerapp/shiki'
 
-import dimerEdge from '../index'
-import { Renderer } from '../src/Renderer'
-
-function getSourceFrame(contents: string[], lineNumber: number) {
-  const pre = contents
-    .slice(Math.max(0, lineNumber - (3 + 1)), lineNumber - 1)
-    .map((row) => `<div class="line dim">${row}</div>`)
-    .join('')
-
-  const line = `<div class="line highlight">${contents[lineNumber - 1]}</div>`
-  const post = contents
-    .slice(lineNumber, lineNumber + 3)
-    .map((row) => `<div class="line dim">${row}</div>`)
-    .join('')
-
-  return `<pre><code>${pre}${line}${post}</code></pre>`
-}
+import * as utils from '../src/utils.js'
+import { dimerProvider } from '../index.js'
+import { MarkdownRenderer } from '../src/renderer.js'
 
 createServer(async (_, res) => {
-  const file = new MarkdownFile(await readFile(join(__dirname, './doc.md'), 'utf-8'), {
+  const file = new MarkdownFile(await readFile(new URL('./doc.md', import.meta.url), 'utf-8'), {
     generateToc: true,
     enableDirectives: true,
   })
 
-  Object.keys(macros).forEach((name) => macros[name](file))
+  for (const macro of Object.values(macros)) {
+    file.use(macro)
+  }
+
+  const shikiRenderer = new ShikiRenderer()
+  await shikiRenderer.boot()
+
+  file.transform(codeblocks, shikiRenderer)
   await file.process()
 
   const edge = new Edge()
-  Object.keys(GLOBALS).forEach((name) => edge.global(name, GLOBALS[name]))
+  const renderer = new MarkdownRenderer()
+  renderer.use((node) => {
+    if (node.tagName === 'pre') {
+      return ['elements/pre', { node, renderer }]
+    }
+  })
 
-  edge.use(dimerEdge)
-  edge.mount(join(__dirname, 'views'))
+  for (const name of Object.keys(GLOBALS)) {
+    edge.global(name, GLOBALS[name as keyof typeof GLOBALS])
+  }
 
-  const html = edge
-    .share({
-      dimerRenderer: new Renderer(),
-      getSourceFrame: getSourceFrame,
-    })
-    .render('guide', { file })
+  edge.use(dimerProvider)
+  edge.mount(fileURLToPath(new URL('views', import.meta.url)))
+  const html = await edge.render('guide', { file, dimerRenderer: renderer })
 
   res.writeHead(200, { 'content-type': 'text/html' })
   res.end(html)

@@ -7,45 +7,43 @@
  * file that was distributed with this source code.
  */
 
-import { EdgeContract } from 'edge.js'
+import type { EdgeContract } from 'edge.js'
 
-import { Utils } from './src/Utils'
-import { DimerTree } from './src/Tags/DimerTree'
-
-export { Renderer } from './src/Renderer'
+import * as utils from './src/utils.js'
+export { MarkdownRenderer } from './src/renderer.js'
 
 /**
  * Edge plugin to register dimer specific globals, components
  * and tags
  */
-export default function (edge: EdgeContract) {
+export function dimerProvider(edge: EdgeContract) {
   /**
    * Always needs to be registered once
    */
-  edge.global('dimerUtils', new Utils())
+  edge.global('dimer', {
+    utils: utils,
+  })
 
-  /**
-   * Always needs to be registered once
-   */
-  edge.registerTag(DimerTree)
-
-  /**
-   * Always needs to be registered once
-   */
-  edge.registerTemplate('dimer::text', {
-    template: '{{node.value}}',
+  edge.registerTemplate('dimer_contents', {
+    template: [
+      '@each(node in nodes)~',
+      `@set('nodeComponent', await renderer.componentFor(node, renderer))`,
+      `@!component(nodeComponent[0], nodeComponent[1])~`,
+      '@end',
+    ].join('\n'),
   })
 
   /**
-   * Render an element
+   * Renders an element node of the HAST syntax
+   * tree
    */
-  edge.registerTemplate('dimer::element', {
+  edge.registerTemplate('dimer_element', {
     template: [
-      '@if(dimerUtils.isVoidElement(node.tagName))~',
-      '<{{node.tagName}}{{{dimerUtils.propsToAttributes(node.properties)}}}/>',
+      '@if(dimer.utils.isVoidElement(node.tagName))~',
+      '<{{node.tagName}}{{{dimer.utils.stringifyAttributes(node.properties)}}}/>',
       '@else~',
-      '<{{node.tagName}}{{{dimerUtils.propsToAttributes(node.properties)}}}>',
-      '@dimerTree(node.children, renderer)~',
+      '<{{node.tagName}}{{{dimer.utils.stringifyAttributes(node.properties)}}}>',
+      `@!component('dimer_contents', { nodes: node.children, renderer })~`,
       '</{{node.tagName}}>',
       '@endif',
     ].join('\n'),
@@ -54,7 +52,14 @@ export default function (edge: EdgeContract) {
   /**
    * Used when renderer wants to skip a node
    */
-  edge.registerTemplate('dimer::void', {
+  edge.registerTemplate('dimer_void', {
     template: '',
+  })
+
+  /**
+   * Renders the text node value
+   */
+  edge.registerTemplate('dimer_text', {
+    template: '{{node.value}}',
   })
 }
