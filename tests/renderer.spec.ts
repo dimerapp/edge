@@ -37,12 +37,12 @@ test.group('Edge renderer', () => {
     assert.equal(
       html,
       dedent`
-			<h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex=-1><span class="icon icon-link"></span></a>Hello world</h1>
-			<p>This is a paragraph</p>
-			<ul>
-			<li>List item</li>
-			</ul>
-		`
+      <h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex=-1><span class="icon icon-link"></span></a>Hello world</h1>
+      <p>This is a paragraph</p>
+      <ul>
+      <li>List item</li>
+      </ul>
+    `
     )
   })
 
@@ -79,10 +79,10 @@ test.group('Edge renderer', () => {
     assert.equal(
       html,
       dedent`
-			<h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex=-1><span class="icon icon-link"></span></a>Hello world</h1>
-			<p>This is a paragraph</p>
-			<div class="alert alert-note"><p>This is a note</p></div>
-		`
+      <h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex=-1><span class="icon icon-link"></span></a>Hello world</h1>
+      <p>This is a paragraph</p>
+      <div class="alert alert-note"><p>This is a note</p></div>
+    `
     )
   })
 
@@ -113,10 +113,10 @@ test.group('Edge renderer', () => {
     assert.equal(
       html,
       dedent`
-			<h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex=-1><span class="icon icon-link"></span></a>Hello world</h1>
-			<p>This is a paragraph</p>
-			<div class="note">This is a note</div>
-		`
+      <h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex=-1><span class="icon icon-link"></span></a>Hello world</h1>
+      <p>This is a paragraph</p>
+      <div class="note">This is a note</div>
+    `
     )
   })
 
@@ -147,8 +147,8 @@ test.group('Edge renderer', () => {
     assert.equal(
       html,
       dedent`
-			<li><a href="#hello-world">Hello world</a></li>
-		`
+      <li><a href="#hello-world">Hello world</a></li>
+    `
     )
   })
 
@@ -164,13 +164,13 @@ test.group('Edge renderer', () => {
     })
 
     edge.registerTemplate('pre', {
-      template: dedent`
-				<div class="highlight">
-					<pre>
-					@!component('dimer_contents', { nodes: node.children, renderer })
-					</pre>
-				</div>
-			`,
+      template: [
+        '<div class="highlight">',
+        '<pre>',
+        `@!component('dimer_contents', { nodes: node.children, renderer })`,
+        '</pre>',
+        '</div>',
+      ].join('\n'),
     })
 
     const html = await edge
@@ -184,15 +184,15 @@ test.group('Edge renderer', () => {
       .render('guide', { file })
 
     assert.equal(
-      html,
+      dedent`${html}`,
       dedent`
-			<p>This is a codeblock</p>
-			<div class="highlight">
-				<pre><code>const a = require(&quot;a&quot;)
-			</code>
-				</pre>
-			</div>
-		`
+      <p>This is a codeblock</p>
+      <div class="highlight">
+      <pre><code>const a = require(&quot;a&quot;)
+      </code>
+      </pre>
+      </div>
+    `
     )
   })
 
@@ -220,8 +220,8 @@ test.group('Edge renderer', () => {
     assert.equal(
       html,
       dedent`
-			<p>This is a codeblock</p>
-		`
+      <p>This is a codeblock</p>
+    `
     )
   })
 
@@ -237,13 +237,13 @@ test.group('Edge renderer', () => {
     })
 
     edge.registerTemplate('pre', {
-      template: dedent`
-				<div class="highlight">
-					<pre>
-					@!component('dimer_contents', { nodes: node.children, renderer: secondaryRenderer })
-					</pre>
-				</div>
-			`,
+      template: [
+        '<div class="highlight">',
+        '<pre>',
+        `@!component('dimer_contents', { nodes: node.children, renderer: secondaryRenderer })`,
+        '</pre>',
+        '</div>',
+      ].join('\n'),
     })
 
     const html = await edge
@@ -259,13 +259,13 @@ test.group('Edge renderer', () => {
     assert.equal(
       html,
       dedent`
-			<p>This is a codeblock</p>
-			<div class="highlight">
-				<pre><code>const a = require(&quot;a&quot;)
-			</code>
-				</pre>
-			</div>
-		`
+      <p>This is a codeblock</p>
+      <div class="highlight">
+      <pre><code>const a = require(&quot;a&quot;)
+      </code>
+      </pre>
+      </div>
+    `
     )
   })
 })
