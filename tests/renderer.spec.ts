@@ -184,7 +184,7 @@ test.group('Edge renderer', () => {
       .render('guide', { file })
 
     assert.equal(
-      dedent`${html}`,
+      html,
       dedent`
       <p>This is a codeblock</p>
       <div class="highlight">
