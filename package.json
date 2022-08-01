@@ -67,7 +67,7 @@
     "stringify-attributes": "^3.0.0"
   },
   "peerDependencies": {
-    "@dimerapp/markdown": "^7.0.0-0"
+    "@dimerapp/markdown": "^7.0.1-0"
   },
   "directories": {
     "example": "example",
