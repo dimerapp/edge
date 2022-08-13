@@ -4,7 +4,7 @@ import { createServer } from 'node:http'
 import { readFile } from 'node:fs/promises'
 import { MarkdownFile } from '@dimerapp/markdown'
 import * as macros from '@dimerapp/markdown/macros'
-import { ShikiRenderer, codeblocks } from '@dimerapp/shiki'
+import { Shiki, codeblocks } from '@dimerapp/shiki'
 
 import { dimerProvider, MarkdownRenderer } from '../index.js'
 
@@ -18,10 +18,10 @@ createServer(async (_, res) => {
     file.use(macro)
   }
 
-  const shikiRenderer = new ShikiRenderer()
-  await shikiRenderer.boot()
+  const shiki = new Shiki()
+  await shiki.boot()
 
-  file.transform(codeblocks, shikiRenderer)
+  file.transform(codeblocks, shiki)
   await file.process()
 
   const edge = new Edge()
