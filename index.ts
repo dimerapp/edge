@@ -28,7 +28,10 @@ export function dimerProvider(edge: EdgeContract) {
     template: [
       '@each(node in nodes)~',
       `@set('nodeComponent', await renderer.componentFor(node, renderer))`,
-      `@!component(nodeComponent[0], nodeComponent[1])~`,
+      `@!component(nodeComponent[0], {
+        ...$props.except(['nodes', 'renderer']),
+        ...nodeComponent[1],
+      })~`,
       '@end',
     ].join('\n'),
   })
@@ -43,7 +46,10 @@ export function dimerProvider(edge: EdgeContract) {
       '<{{node.tagName}}{{{dimer.utils.stringifyAttributes(node.properties)}}}/>',
       '@else~',
       '<{{node.tagName}}{{{dimer.utils.stringifyAttributes(node.properties)}}}>',
-      `@!component('dimer_contents', { nodes: node.children, renderer })~`,
+      `@!component('dimer_contents', {
+        nodes: node.children,
+        ...$props.except(['node']),
+      })~`,
       '</{{node.tagName}}>',
       '@endif',
     ].join('\n'),
