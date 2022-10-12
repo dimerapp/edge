@@ -77,7 +77,7 @@
     "anyBranch": false
   },
   "dependencies": {
-    "edge-error": "^2.0.3",
+    "edge-error": "^3.0.0",
     "escape-goat": "^3.0.0",
     "hast-util-to-string": "^1.0.4",
     "property-information": "^5.6.0"
