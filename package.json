@@ -5,8 +5,11 @@
   "main": "build/index.js",
   "type": "module",
   "files": [
+    "src",
+    "index.ts",
     "build/src",
     "build/index.d.ts",
+    "build/index.js.map",
     "build/index.js"
   ],
   "exports": {
