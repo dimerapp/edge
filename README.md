@@ -110,5 +110,5 @@ Also, we are using Alpine.js to implement the frontend. For this example, you ca
 [license-image]: https://img.shields.io/npm/l/@dimerapp/edge?color=blueviolet&style=for-the-badge
 [license-url]: LICENSE.md "license"
 
-[gh-workflow-image]: https://img.shields.io/github/workflow/status/dimerapp/edge/test?style=for-the-badge
+[gh-workflow-image]: https://img.shields.io/github/actions/workflow/status/dimerapp/edge/test.yml?style=for-the-badge
 [gh-workflow-url]: https://github.com/dimerapp/edge/actions/workflows/test.yml "Github actions"
