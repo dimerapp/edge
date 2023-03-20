@@ -124,6 +124,8 @@ test.group('Edge renderer', () => {
     const markdown = [
       '# Hello world',
       '',
+      '',
+      '## This will in toc',
       'This is a paragraph',
       '',
       '<div class="note">This is a note</div>',
@@ -147,7 +149,7 @@ test.group('Edge renderer', () => {
     assert.equal(
       html,
       dedent`
-      <li><a href="#hello-world">Hello world</a></li>
+      <li><a href="#this-will-in-toc">This will in toc</a></li>
     `
     )
   })

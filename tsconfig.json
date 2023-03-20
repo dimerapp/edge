@@ -17,7 +17,7 @@
     "strictPropertyInitialization": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
-    "sourceMap": true,
+    "declarationMap": true,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
     "skipLibCheck": true,
