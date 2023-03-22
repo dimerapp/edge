@@ -34,15 +34,15 @@ Import the `dimerProvider` function and register it as the edge plugin. The func
 ```ts
 import { Edge } from 'edge.js'
 import { fileURLToPath } from 'node:url'
-import { dimerProvider, MarkdownRenderer } from '@dimerapp/edge'
+import { dimerEdge, DimerEdgeRenderer } from '@dimerapp/edge'
 
 const viewsPath = fileURLToPath(new URL('./views', import.meta.url))
 const edge = new Edge()
-const renderer = new MarkdownRenderer()
-
 edge.mount(viewsPath)
-edge.use(dimerProvider)
 
+edge.use(dimerEdge)
+
+const renderer = new DimerEdgeRenderer()
 await edge.render('guide.edge', {
   markdownFile: md,
   renderer
@@ -71,9 +71,9 @@ In the following example, we capture the node with the tagName of `pre` and rend
 
 ```ts
 import { hasClass } from '@dimerapp/edge/utils'
-import { MarkdownRenderer } from '@dimerapp/edge'
+import { DimerEdgeRenderer } from '@dimerapp/edge'
 
-const renderer = new MarkdownRenderer()
+const renderer = new DimerEdgeRenderer()
 
 renderer.use((node) => {
   if (node.tagName === 'pre') {

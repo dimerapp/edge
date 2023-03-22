@@ -6,7 +6,7 @@ import { MarkdownFile } from '@dimerapp/markdown'
 import * as macros from '@dimerapp/markdown/macros'
 import { Shiki, codeblocks } from '@dimerapp/shiki'
 
-import { dimerProvider, MarkdownRenderer } from '../index.js'
+import { dimerEdge, DimerEdgeRenderer } from '../index.js'
 
 createServer(async (_, res) => {
   const file = new MarkdownFile(await readFile(new URL('./doc.md', import.meta.url), 'utf-8'), {
@@ -25,7 +25,7 @@ createServer(async (_, res) => {
   await file.process()
 
   const edge = new Edge()
-  const renderer = new MarkdownRenderer()
+  const renderer = new DimerEdgeRenderer()
   renderer.use((node) => {
     if (node.tagName === 'pre') {
       return ['elements/pre', { node, renderer }]
@@ -36,7 +36,7 @@ createServer(async (_, res) => {
     edge.global(name, GLOBALS[name as keyof typeof GLOBALS])
   }
 
-  edge.use(dimerProvider)
+  edge.use(dimerEdge)
   edge.mount(fileURLToPath(new URL('views', import.meta.url)))
   const html = await edge.render('guide', { file, dimerRenderer: renderer })
 

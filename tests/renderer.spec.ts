@@ -14,7 +14,7 @@ import { test } from '@japa/runner'
 import { MarkdownFile } from '@dimerapp/markdown'
 import * as macros from '@dimerapp/markdown/macros'
 
-import { dimerProvider, MarkdownRenderer } from '../index.js'
+import { dimerEdge, DimerEdgeRenderer } from '../index.js'
 
 test.group('Edge renderer', () => {
   test('render markdown AST using the renderer', async ({ assert }) => {
@@ -23,14 +23,14 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerProvider)
+    edge.use(dimerEdge)
     edge.registerTemplate('guide', {
       template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
     })
 
     const html = await edge
       .share({
-        renderer: new MarkdownRenderer(),
+        renderer: new DimerEdgeRenderer(),
       })
       .render('guide', { file })
 
@@ -65,14 +65,14 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerProvider)
+    edge.use(dimerEdge)
     edge.registerTemplate('guide', {
       template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
     })
 
     const html = await edge
       .share({
-        renderer: new MarkdownRenderer(),
+        renderer: new DimerEdgeRenderer(),
       })
       .render('guide', { file })
 
@@ -99,14 +99,14 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerProvider)
+    edge.use(dimerEdge)
     edge.registerTemplate('guide', {
       template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
     })
 
     const html = await edge
       .share({
-        renderer: new MarkdownRenderer(),
+        renderer: new DimerEdgeRenderer(),
       })
       .render('guide', { file })
 
@@ -135,14 +135,14 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerProvider)
+    edge.use(dimerEdge)
     edge.registerTemplate('guide', {
       template: `@!component('dimer_contents', { nodes: file.toc.children, renderer })`,
     })
 
     const html = await edge
       .share({
-        renderer: new MarkdownRenderer(),
+        renderer: new DimerEdgeRenderer(),
       })
       .render('guide', { file })
 
@@ -160,7 +160,7 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerProvider)
+    edge.use(dimerEdge)
     edge.registerTemplate('guide', {
       template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
     })
@@ -177,7 +177,7 @@ test.group('Edge renderer', () => {
 
     const html = await edge
       .share({
-        renderer: new MarkdownRenderer().use((node, renderer) => {
+        renderer: new DimerEdgeRenderer().use((node, renderer) => {
           if (node.tagName === 'pre') {
             return ['pre', { node, renderer }]
           }
@@ -204,14 +204,14 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerProvider)
+    edge.use(dimerEdge)
     edge.registerTemplate('guide', {
       template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
     })
 
     const html = await edge
       .share({
-        renderer: new MarkdownRenderer().use((node) => {
+        renderer: new DimerEdgeRenderer().use((node) => {
           if (node.tagName === 'pre') {
             return false
           }
@@ -233,7 +233,7 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerProvider)
+    edge.use(dimerEdge)
     edge.registerTemplate('guide', {
       template: `@!component('dimer_contents', { nodes: file.ast.children, renderer: secondaryRenderer })`,
     })
@@ -250,7 +250,7 @@ test.group('Edge renderer', () => {
 
     const html = await edge
       .share({
-        secondaryRenderer: new MarkdownRenderer().use((node) => {
+        secondaryRenderer: new DimerEdgeRenderer().use((node) => {
           if (node.tagName === 'pre') {
             return ['pre', { node }]
           }

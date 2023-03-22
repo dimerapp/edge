@@ -8,14 +8,7 @@
  */
 
 import type { hastTypes } from '@dimerapp/markdown/types'
-
-/**
- * Shape of the renderer hook
- */
-type HookCallback = (
-  node: hastTypes.Element,
-  renderer: MarkdownRenderer
-) => void | boolean | [string, Record<string, any>]
+import type { HookCallback } from './types.js'
 
 /**
  * Renderers allows using custom components for any node
@@ -25,7 +18,7 @@ type HookCallback = (
  * name and props for the component.
  *
  * ```ts
- * const renderer = new MarkdownRenderer()
+ * const renderer = new DimerEdgeRenderer()
  * renderer.use((node, self) => {
  *   if (node.tagName === 'pre') {
  *     return ['components/pre', { node, renderer: self }]
@@ -33,7 +26,7 @@ type HookCallback = (
  * })
  * ```
  */
-export class MarkdownRenderer {
+export class DimerEdgeRenderer {
   #hooks: HookCallback[] = []
 
   /**
@@ -54,7 +47,7 @@ export class MarkdownRenderer {
    */
   componentFor(
     node: hastTypes.Element | hastTypes.Text,
-    renderer: MarkdownRenderer
+    renderer: DimerEdgeRenderer
   ): [string, Record<string, any>] {
     /**
      * Always uses the "dimer_text" component for
