@@ -14,7 +14,22 @@ import * as utils from './utils.js'
  * Edge plugin to register dimer specific globals, components
  * and tags
  */
-export function dimerEdge(edge: EdgeContract) {
+export function dimerEdge(edge: EdgeContract, firstRun: boolean) {
+  /**
+   * Return early when plugin is registered in recurring mode
+   */
+  if (!firstRun) {
+    return
+  }
+
+  /**
+   * Do not re-register templates and globals when already
+   * exists
+   */
+  if (edge.GLOBALS.dimer) {
+    return
+  }
+
   /**
    * Always needs to be registered once
    */

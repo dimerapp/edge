@@ -270,4 +270,55 @@ test.group('Edge renderer', () => {
     `
     )
   })
+
+  test('work fine when plugin is registered multiple times', async ({ assert }) => {
+    const markdown = ['# Hello world', '', 'This is a paragraph', '', '- List item'].join('\n')
+    const file = new MarkdownFile(markdown)
+    await file.process()
+
+    const edge = new Edge()
+    edge.use(dimerEdge)
+    edge.use(dimerEdge)
+    edge.use(dimerEdge)
+    edge.registerTemplate('guide', {
+      template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
+    })
+
+    const html = await edge
+      .share({
+        renderer: new DimerEdgeRenderer(),
+      })
+      .render('guide', { file })
+
+    assert.equal(
+      html,
+      dedent`
+      <h1 id="hello-world"><a href="#hello-world" aria-hidden=true tabindex=-1><span class="icon icon-link"></span></a>Hello world</h1>
+      <p>This is a paragraph</p>
+      <ul>
+      <li>List item</li>
+      </ul>
+    `
+    )
+  })
+
+  test('work fine when plugin is registered in recurring mode', async ({ assert }) => {
+    const markdown = ['# Hello world', '', 'This is a paragraph', '', '- List item'].join('\n')
+    const file = new MarkdownFile(markdown)
+    await file.process()
+
+    const edge = new Edge()
+    edge.use(dimerEdge, { recurring: true })
+
+    edge.registerTemplate('guide', {
+      template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
+    })
+
+    const html = await edge.render('guide', { file, renderer: new DimerEdgeRenderer() })
+    const html1 = await edge.render('guide', { file, renderer: new DimerEdgeRenderer() })
+    const html2 = await edge.render('guide', { file, renderer: new DimerEdgeRenderer() })
+
+    assert.equal(html, html1)
+    assert.equal(html, html2)
+  })
 })
