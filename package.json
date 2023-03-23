@@ -1,6 +1,6 @@
 {
   "name": "@dimerapp/edge",
-  "version": "3.0.0-4",
+  "version": "3.0.0-5",
   "description": "Edge renderer for rendering dimer markdown AST",
   "main": "build/index.js",
   "type": "module",
