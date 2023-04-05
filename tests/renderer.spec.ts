@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { EOL } from 'node:os'
 import { Edge } from 'edge.js'
 import { dedent } from 'ts-dedent'
 import { test } from '@japa/runner'
@@ -19,7 +18,7 @@ import { dimer, RenderingPipeline } from '../index.js'
 
 test.group('Edge pipeline', () => {
   test('render markdown AST using the pipeline', async ({ assert }) => {
-    const markdown = ['# Hello world', '', 'This is a paragraph', '', '- List item'].join(EOL)
+    const markdown = ['# Hello world', '', 'This is a paragraph', '', '- List item'].join('\n')
     const file = new MarkdownFile(markdown)
     await file.process()
 
@@ -56,7 +55,7 @@ test.group('Edge pipeline', () => {
       ':::note',
       'This is a note',
       ':::',
-    ].join(EOL)
+    ].join('\n')
 
     const file = new MarkdownFile(markdown, { enableDirectives: true })
     for (const macro of Object.values(macros)) {
@@ -94,7 +93,7 @@ test.group('Edge pipeline', () => {
       'This is a paragraph',
       '',
       '<div class="note">This is a note</div>',
-    ].join(EOL)
+    ].join('\n')
 
     const file = new MarkdownFile(markdown, { allowHtml: true })
     await file.process()
@@ -130,7 +129,7 @@ test.group('Edge pipeline', () => {
       'This is a paragraph',
       '',
       '<div class="note">This is a note</div>',
-    ].join(EOL)
+    ].join('\n')
 
     const file = new MarkdownFile(markdown, { generateToc: true })
     await file.process()
@@ -156,7 +155,7 @@ test.group('Edge pipeline', () => {
   })
 
   test('use pipeline hooks', async ({ assert }) => {
-    const markdown = ['This is a codeblock', '', '```', 'const a = require("a")', '```'].join(EOL)
+    const markdown = ['This is a codeblock', '', '```', 'const a = require("a")', '```'].join('\n')
     const file = new MarkdownFile(markdown)
     await file.process()
 
@@ -173,7 +172,7 @@ test.group('Edge pipeline', () => {
         `@!component('dimer_contents', { nodes: node.children, pipeline })`,
         '</pre>',
         '</div>',
-      ].join(EOL),
+      ].join('\n'),
     })
 
     const html = await edge
@@ -186,21 +185,21 @@ test.group('Edge pipeline', () => {
       })
       .render('guide', { file })
 
-    assert.equal(
-      html,
-      dedent`
-      <p>This is a codeblock</p>
-      <div class="highlight">
-      <pre><code>const a = require(&quot;a&quot;)
-      </code>
-      </pre>
-      </div>
-    `
+    assert.deepEqual(
+      html.split('\n').map((line) => line.trim()),
+      [
+        '<p>This is a codeblock</p>',
+        '<div class="highlight">',
+        '<pre><code>const a = require(&quot;a&quot;)',
+        '</code>',
+        '</pre>',
+        '</div>',
+      ]
     )
   })
 
   test('skip nodes when hook returns false', async ({ assert }) => {
-    const markdown = ['This is a codeblock', '', '```', 'const a = require("a")', '```'].join(EOL)
+    const markdown = ['This is a codeblock', '', '```', 'const a = require("a")', '```'].join('\n')
     const file = new MarkdownFile(markdown)
     await file.process()
 
@@ -229,7 +228,7 @@ test.group('Edge pipeline', () => {
   })
 
   test('use different pipeline for dimer_contents component', async ({ assert }) => {
-    const markdown = ['This is a codeblock', '', '```', 'const a = require("a")', '```'].join(EOL)
+    const markdown = ['This is a codeblock', '', '```', 'const a = require("a")', '```'].join('\n')
     const file = new MarkdownFile(markdown)
     await file.process()
 
@@ -246,7 +245,7 @@ test.group('Edge pipeline', () => {
         `@!component('dimer_contents', { nodes: node.children, pipeline: secondaryPipeline })`,
         '</pre>',
         '</div>',
-      ].join(EOL),
+      ].join('\n'),
     })
 
     const html = await edge
@@ -259,21 +258,21 @@ test.group('Edge pipeline', () => {
       })
       .render('guide', { file })
 
-    assert.equal(
-      html,
-      dedent`
-      <p>This is a codeblock</p>
-      <div class="highlight">
-      <pre><code>const a = require(&quot;a&quot;)
-      </code>
-      </pre>
-      </div>
-    `
+    assert.deepEqual(
+      html.split('\n').map((line) => line.trim()),
+      [
+        '<p>This is a codeblock</p>',
+        '<div class="highlight">',
+        '<pre><code>const a = require(&quot;a&quot;)',
+        '</code>',
+        '</pre>',
+        '</div>',
+      ]
     )
   })
 
   test('work fine when plugin is registered multiple times', async ({ assert }) => {
-    const markdown = ['# Hello world', '', 'This is a paragraph', '', '- List item'].join(EOL)
+    const markdown = ['# Hello world', '', 'This is a paragraph', '', '- List item'].join('\n')
     const file = new MarkdownFile(markdown)
     await file.process()
 
@@ -304,7 +303,7 @@ test.group('Edge pipeline', () => {
   })
 
   test('work fine when plugin is registered in recurring mode', async ({ assert }) => {
-    const markdown = ['# Hello world', '', 'This is a paragraph', '', '- List item'].join(EOL)
+    const markdown = ['# Hello world', '', 'This is a paragraph', '', '- List item'].join('\n')
     const file = new MarkdownFile(markdown)
     await file.process()
 
