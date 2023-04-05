@@ -29,23 +29,23 @@ yarn add @dimerapp/markdown
 ```
 
 ## Usage
-Import the `dimerProvider` function and register it as the edge plugin. The function registers the neccessary helpers and in-memory templates to render the markdown AST.
+Import the `dimer` function and register it as the edge plugin. The function registers the neccessary helpers and in-memory templates to render the markdown AST.
 
 ```ts
 import { Edge } from 'edge.js'
 import { fileURLToPath } from 'node:url'
-import { dimerEdge, DimerEdgeRenderer } from '@dimerapp/edge'
+import { dimer, RenderingPipeline } from '@dimerapp/edge'
 
 const viewsPath = fileURLToPath(new URL('./views', import.meta.url))
 const edge = new Edge()
+
 edge.mount(viewsPath)
+edge.use(dimer)
 
-edge.use(dimerEdge)
-
-const renderer = new DimerEdgeRenderer()
+const pipeline = new RenderingPipeline()
 await edge.render('guide.edge', {
   markdownFile: md,
-  renderer
+  pipeline
 })
 ```
 
@@ -57,7 +57,7 @@ Next, create the `guide.edge` file and paste the following markup inside it.
 <head>
 </head>
 <body>
-  @!component('dimer_contents', { node: md.ast.children, renderer })~
+  @!component('dimer_contents', { nodes: md.ast.children, pipeline })~
 </body>
 </html>
 ```
@@ -71,13 +71,13 @@ In the following example, we capture the node with the tagName of `pre` and rend
 
 ```ts
 import { hasClass } from '@dimerapp/edge/utils'
-import { DimerEdgeRenderer } from '@dimerapp/edge'
+import { RenderingPipeline } from '@dimerapp/edge'
 
-const renderer = new DimerEdgeRenderer()
+const pipeline = new RenderingPipeline()
 
-renderer.use((node) => {
+pipeline.use((node) => {
   if (node.tagName === 'pre') {
-    return ['elements/pre', { node, renderer }]
+    return pipeline.component('elements/pre', { node })
   }
 })
 ```
@@ -93,11 +93,11 @@ Also, we are using Alpine.js to implement the frontend. For this example, you ca
 ```html
 <div x-data="{
   copy() {
-    navigator.clipboard.writeText($el.querySelector('code').textContent)
+    navigator.clipboard.writeText($root.querySelector('code').textContent)
   }
 }">
   <button @click="copy"> Copy to clipboard </button>
-  @!component('dimer_element', { node, renderer })~
+  @!component('dimer_element', { node, pipeline })~
 </div>
 ```
 

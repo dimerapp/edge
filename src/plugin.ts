@@ -14,7 +14,7 @@ import * as utils from './utils.js'
  * Edge plugin to register dimer specific globals, components
  * and tags
  */
-export function dimerEdge(edge: EdgeContract, firstRun: boolean) {
+export function dimer(edge: EdgeContract, firstRun: boolean) {
   /**
    * Return early when plugin is registered in recurring mode
    */
@@ -40,9 +40,9 @@ export function dimerEdge(edge: EdgeContract, firstRun: boolean) {
   edge.registerTemplate('dimer_contents', {
     template: [
       '@each(node in nodes)~',
-      `@set('nodeComponent', await renderer.componentFor(node, renderer))`,
+      `@set('nodeComponent', await pipeline.componentFor(node, pipeline))`,
       `@!component(nodeComponent[0], {
-        ...$props.except(['nodes', 'renderer']),
+        ...$props.except(['nodes', 'pipeline']),
         ...nodeComponent[1],
       })~`,
       '@end',

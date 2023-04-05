@@ -8,5 +8,5 @@
  */
 
 export * from './src/types.js'
-export { dimerEdge } from './src/plugin.js'
-export { DimerEdgeRenderer } from './src/dimer_edge_renderer.js'
+export { dimer } from './src/plugin.js'
+export { RenderingPipeline } from './src/pipeline.js'

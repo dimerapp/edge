@@ -8,12 +8,12 @@
  */
 
 import type { hastTypes } from '@dimerapp/markdown/types'
-import type { DimerEdgeRenderer } from './dimer_edge_renderer.js'
+import type { RenderingPipeline } from './pipeline.js'
 
 /**
- * Shape of the renderer hook
+ * Shape of the pipeline hook
  */
-export type HookCallback = (
+export type PipelineHook = (
   node: hastTypes.Element,
-  renderer: DimerEdgeRenderer
+  renderer: RenderingPipeline
 ) => void | boolean | [string, Record<string, any>]

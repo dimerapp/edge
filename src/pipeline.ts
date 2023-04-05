@@ -8,26 +8,27 @@
  */
 
 import type { hastTypes } from '@dimerapp/markdown/types'
-import type { HookCallback } from './types.js'
+import type { PipelineHook } from './types.js'
 
 /**
- * Renderers allows using custom components for any node
- * inside the AST.
- *
- * Just define the hook to capture a node and return the
- * name and props for the component.
+ * The rendering pipeline is used to hook into the markdown
+ * rendering phase and use custom components to render
+ * a done.
  *
  * ```ts
- * const renderer = new DimerEdgeRenderer()
- * renderer.use((node, self) => {
+ * const pipeline = new RenderingPipeline()
+ * pipeline.use((node, self) => {
  *   if (node.tagName === 'pre') {
- *     return ['components/pre', { node, renderer: self }]
+ *     return pipeline.component(
+ *      'components/pre',
+ *      { node }
+ *     )
  *   }
  * })
  * ```
  */
-export class DimerEdgeRenderer {
-  #hooks: HookCallback[] = []
+export class RenderingPipeline {
+  #hooks: PipelineHook[] = []
 
   /**
    * Define a callback to handle rendering of a given node. The callback
@@ -37,9 +38,19 @@ export class DimerEdgeRenderer {
    * - Return "false" to skip the node from the output.
    * - Return an array with the component name and the props to pass to the component.
    */
-  use(callback: HookCallback): this {
+  use(callback: PipelineHook): this {
     this.#hooks.push(callback)
     return this
+  }
+
+  /**
+   * Use a custom edge component and define its state
+   */
+  component(
+    name: string,
+    state: { node: hastTypes.Element } & Record<string, any>
+  ): [string, { node: hastTypes.Element; pipeline: RenderingPipeline } & Record<string, any>] {
+    return [name, { pipeline: this, ...state }]
   }
 
   /**
@@ -47,7 +58,7 @@ export class DimerEdgeRenderer {
    */
   componentFor(
     node: hastTypes.Element | hastTypes.Text,
-    renderer: DimerEdgeRenderer
+    pipeline: RenderingPipeline
   ): [string, Record<string, any>] {
     /**
      * Always uses the "dimer_text" component for
@@ -64,7 +75,7 @@ export class DimerEdgeRenderer {
      * for a specific node
      */
     for (let hook of this.#hooks) {
-      component = hook(node, renderer)
+      component = hook(node, pipeline)
       if (component !== undefined) {
         break
       }
@@ -88,6 +99,6 @@ export class DimerEdgeRenderer {
     /**
      * Self handle node rendering
      */
-    return ['dimer_element', { node, renderer: renderer }]
+    return ['dimer_element', { node, pipeline }]
   }
 }
