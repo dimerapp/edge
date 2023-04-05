@@ -7,6 +7,5 @@
  * file that was distributed with this source code.
  */
 
-export * from './src/types.js'
 export { dimer } from './src/plugin.js'
 export { RenderingPipeline } from './src/pipeline.js'

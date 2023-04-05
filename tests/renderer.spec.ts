@@ -14,23 +14,23 @@ import { test } from '@japa/runner'
 import { MarkdownFile } from '@dimerapp/markdown'
 import * as macros from '@dimerapp/markdown/macros'
 
-import { dimerEdge, DimerEdgeRenderer } from '../index.js'
+import { dimer, RenderingPipeline } from '../index.js'
 
-test.group('Edge renderer', () => {
-  test('render markdown AST using the renderer', async ({ assert }) => {
+test.group('Edge pipeline', () => {
+  test('render markdown AST using the pipeline', async ({ assert }) => {
     const markdown = ['# Hello world', '', 'This is a paragraph', '', '- List item'].join('\n')
     const file = new MarkdownFile(markdown)
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerEdge)
+    edge.use(dimer)
     edge.registerTemplate('guide', {
-      template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
+      template: `@!component('dimer_contents', { nodes: file.ast.children, pipeline })`,
     })
 
     const html = await edge
       .share({
-        renderer: new DimerEdgeRenderer(),
+        pipeline: new RenderingPipeline(),
       })
       .render('guide', { file })
 
@@ -65,14 +65,14 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerEdge)
+    edge.use(dimer)
     edge.registerTemplate('guide', {
-      template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
+      template: `@!component('dimer_contents', { nodes: file.ast.children, pipeline })`,
     })
 
     const html = await edge
       .share({
-        renderer: new DimerEdgeRenderer(),
+        pipeline: new RenderingPipeline(),
       })
       .render('guide', { file })
 
@@ -99,14 +99,14 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerEdge)
+    edge.use(dimer)
     edge.registerTemplate('guide', {
-      template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
+      template: `@!component('dimer_contents', { nodes: file.ast.children, pipeline })`,
     })
 
     const html = await edge
       .share({
-        renderer: new DimerEdgeRenderer(),
+        pipeline: new RenderingPipeline(),
       })
       .render('guide', { file })
 
@@ -135,14 +135,14 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerEdge)
+    edge.use(dimer)
     edge.registerTemplate('guide', {
-      template: `@!component('dimer_contents', { nodes: file.toc.children, renderer })`,
+      template: `@!component('dimer_contents', { nodes: file.toc.children, pipeline })`,
     })
 
     const html = await edge
       .share({
-        renderer: new DimerEdgeRenderer(),
+        pipeline: new RenderingPipeline(),
       })
       .render('guide', { file })
 
@@ -154,22 +154,22 @@ test.group('Edge renderer', () => {
     )
   })
 
-  test('use renderer hooks', async ({ assert }) => {
+  test('use pipeline hooks', async ({ assert }) => {
     const markdown = ['This is a codeblock', '', '```', 'const a = require("a")', '```'].join('\n')
     const file = new MarkdownFile(markdown)
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerEdge)
+    edge.use(dimer)
     edge.registerTemplate('guide', {
-      template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
+      template: `@!component('dimer_contents', { nodes: file.ast.children, pipeline })`,
     })
 
     edge.registerTemplate('pre', {
       template: [
         '<div class="highlight">',
         '<pre>',
-        `@!component('dimer_contents', { nodes: node.children, renderer })`,
+        `@!component('dimer_contents', { nodes: node.children, pipeline })`,
         '</pre>',
         '</div>',
       ].join('\n'),
@@ -177,9 +177,9 @@ test.group('Edge renderer', () => {
 
     const html = await edge
       .share({
-        renderer: new DimerEdgeRenderer().use((node, renderer) => {
+        pipeline: new RenderingPipeline().use((node, pipeline) => {
           if (node.tagName === 'pre') {
-            return ['pre', { node, renderer }]
+            return ['pre', { node, pipeline }]
           }
         }),
       })
@@ -204,14 +204,14 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerEdge)
+    edge.use(dimer)
     edge.registerTemplate('guide', {
-      template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
+      template: `@!component('dimer_contents', { nodes: file.ast.children, pipeline })`,
     })
 
     const html = await edge
       .share({
-        renderer: new DimerEdgeRenderer().use((node) => {
+        pipeline: new RenderingPipeline().use((node) => {
           if (node.tagName === 'pre') {
             return false
           }
@@ -227,22 +227,22 @@ test.group('Edge renderer', () => {
     )
   })
 
-  test('use different renderer for dimer_contents component', async ({ assert }) => {
+  test('use different pipeline for dimer_contents component', async ({ assert }) => {
     const markdown = ['This is a codeblock', '', '```', 'const a = require("a")', '```'].join('\n')
     const file = new MarkdownFile(markdown)
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerEdge)
+    edge.use(dimer)
     edge.registerTemplate('guide', {
-      template: `@!component('dimer_contents', { nodes: file.ast.children, renderer: secondaryRenderer })`,
+      template: `@!component('dimer_contents', { nodes: file.ast.children, pipeline: secondaryPipeline })`,
     })
 
     edge.registerTemplate('pre', {
       template: [
         '<div class="highlight">',
         '<pre>',
-        `@!component('dimer_contents', { nodes: node.children, renderer: secondaryRenderer })`,
+        `@!component('dimer_contents', { nodes: node.children, pipeline: secondaryPipeline })`,
         '</pre>',
         '</div>',
       ].join('\n'),
@@ -250,7 +250,7 @@ test.group('Edge renderer', () => {
 
     const html = await edge
       .share({
-        secondaryRenderer: new DimerEdgeRenderer().use((node) => {
+        secondaryPipeline: new RenderingPipeline().use((node) => {
           if (node.tagName === 'pre') {
             return ['pre', { node }]
           }
@@ -277,16 +277,16 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerEdge)
-    edge.use(dimerEdge)
-    edge.use(dimerEdge)
+    edge.use(dimer)
+    edge.use(dimer)
+    edge.use(dimer)
     edge.registerTemplate('guide', {
-      template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
+      template: `@!component('dimer_contents', { nodes: file.ast.children, pipeline })`,
     })
 
     const html = await edge
       .share({
-        renderer: new DimerEdgeRenderer(),
+        pipeline: new RenderingPipeline(),
       })
       .render('guide', { file })
 
@@ -308,15 +308,15 @@ test.group('Edge renderer', () => {
     await file.process()
 
     const edge = new Edge()
-    edge.use(dimerEdge, { recurring: true })
+    edge.use(dimer, { recurring: true })
 
     edge.registerTemplate('guide', {
-      template: `@!component('dimer_contents', { nodes: file.ast.children, renderer })`,
+      template: `@!component('dimer_contents', { nodes: file.ast.children, pipeline })`,
     })
 
-    const html = await edge.render('guide', { file, renderer: new DimerEdgeRenderer() })
-    const html1 = await edge.render('guide', { file, renderer: new DimerEdgeRenderer() })
-    const html2 = await edge.render('guide', { file, renderer: new DimerEdgeRenderer() })
+    const html = await edge.render('guide', { file, pipeline: new RenderingPipeline() })
+    const html1 = await edge.render('guide', { file, pipeline: new RenderingPipeline() })
+    const html2 = await edge.render('guide', { file, pipeline: new RenderingPipeline() })
 
     assert.equal(html, html1)
     assert.equal(html, html2)
