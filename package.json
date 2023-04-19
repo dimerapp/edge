@@ -84,7 +84,7 @@
   "homepage": "https://github.com/dimerapp/edge#readme",
   "publishConfig": {
     "access": "public",
-    "tag": "prerelease"
+    "tag": "latest"
   },
   "eslintConfig": {
     "extends": [
