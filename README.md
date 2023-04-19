@@ -44,7 +44,7 @@ edge.use(dimer)
 
 const pipeline = new RenderingPipeline()
 await edge.render('guide.edge', {
-  markdownFile: md,
+  file: md,
   pipeline
 })
 ```
@@ -57,7 +57,7 @@ Next, create the `guide.edge` file and paste the following markup inside it.
 <head>
 </head>
 <body>
-  @!component('dimer_contents', { nodes: md.ast.children, pipeline })~
+  @!component('dimer_contents', { nodes: file.ast.children, pipeline })~
 </body>
 </html>
 ```
