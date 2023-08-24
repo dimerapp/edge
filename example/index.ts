@@ -1,4 +1,4 @@
-import { Edge, GLOBALS } from 'edge.js'
+import { Edge } from 'edge.js'
 import { fileURLToPath } from 'node:url'
 import { createServer } from 'node:http'
 import { readFile } from 'node:fs/promises'
@@ -31,10 +31,6 @@ createServer(async (_, res) => {
       return pipeline.component('elements/pre', { node })
     }
   })
-
-  for (const name of Object.keys(GLOBALS)) {
-    edge.global(name, GLOBALS[name as keyof typeof GLOBALS])
-  }
 
   edge.use(dimer)
   edge.mount(fileURLToPath(new URL('views', import.meta.url)))

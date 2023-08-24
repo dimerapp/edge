@@ -85,14 +85,14 @@ export class RenderingPipeline {
      * Skip rendering of the node when "renderer" returns
      * false
      */
-    if (component === false) {
+    if (component! === false) {
       return ['dimer_void', {}]
     }
 
     /**
      * Render custom component when exists
      */
-    if (Array.isArray(component)) {
+    if (Array.isArray(component!)) {
       return component
     }
 
