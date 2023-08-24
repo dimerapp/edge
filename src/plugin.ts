@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import type { EdgeContract } from 'edge.js'
+import type { Edge } from 'edge.js'
 import * as utils from './utils.js'
 
 /**
  * Edge plugin to register dimer specific globals, components
  * and tags
  */
-export function dimer(edge: EdgeContract, firstRun: boolean) {
+export function dimer(edge: Edge, firstRun: boolean) {
   /**
    * Return early when plugin is registered in recurring mode
    */
@@ -23,10 +23,10 @@ export function dimer(edge: EdgeContract, firstRun: boolean) {
   }
 
   /**
-   * Do not re-register templates and globals when already
-   * exists
+   * Do not register globals and templates when already
+   * exists.
    */
-  if (edge.GLOBALS.dimer) {
+  if (edge.globals.dimer) {
     return
   }
 
@@ -40,9 +40,9 @@ export function dimer(edge: EdgeContract, firstRun: boolean) {
   edge.registerTemplate('dimer_contents', {
     template: [
       '@each(node in nodes)~',
-      `@set('nodeComponent', await pipeline.componentFor(node, pipeline))`,
+      `@let(nodeComponent = await pipeline.componentFor(node, pipeline))`,
       `@!component(nodeComponent[0], {
-        ...$props.except(['nodes', 'pipeline']),
+        ...$props.except(['nodes', 'pipeline']).all(),
         ...nodeComponent[1],
       })~`,
       '@end',
@@ -61,7 +61,7 @@ export function dimer(edge: EdgeContract, firstRun: boolean) {
       '<{{node.tagName}}{{{dimer.utils.stringifyAttributes(node.properties)}}}>',
       `@!component('dimer_contents', {
         nodes: node.children,
-        ...$props.except(['node']),
+        ...$props.except(['node']).all(),
       })~`,
       '</{{node.tagName}}>',
       '@endif',
