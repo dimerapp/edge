@@ -67,7 +67,7 @@
   "dependencies": {
     "escape-goat": "^4.0.0",
     "html-tags": "^3.3.1",
-    "property-information": "^6.4.0"
+    "property-information": "^7.0.0"
   },
   "peerDependencies": {
     "@dimerapp/markdown": "^8.0.0",
